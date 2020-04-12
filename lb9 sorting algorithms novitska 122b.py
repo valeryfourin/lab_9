@@ -1,4 +1,9 @@
 '''
+Реалізувати програму, в якій кожен з алгоритмів сортування оформити як окрему
+функцію. Проілюструвати механізм використання параметрів різних типів. Забезпечити
+підрахунок числа необхідних порівнянь, числа обмінів і часу роботи кожної функції,
+сформувавши функції оцінки ефективності методів сортування. Підготувати єдині для
+всіх алгоритмів тестові вихідні дані
 Виконати сортування масиву цілих чисел Ai,i = 0,(N−1) в порядку зростання / за спаданням елементів.
 '''
 import numpy as np
@@ -8,9 +13,14 @@ while True:
     while True:
         try:
             number = int(input('\nInput the numbers of elements in your sequence: '))
-            answer1 = int(input("\nPlease type '1' if you want to input integers,"
+            answer_arr = int(input("\nPlease type '1' if you want to input integers,"
                                 "\ntype '2' if you want to generate integers:"))
-            if answer1 == 1:  # користувач задає послідовність цілих чисел, для цього використаємо масив
+            answer_order = int(input("\nPlease type '1' if you want to sort in growing order,"
+                                "\ntype '2' if you want to sort in descending order:"))
+            answer_sort = int(input("\nPlease type '1' if you want to use bubble sort,"
+                                "\ntype '2' if you want to use selection sort:"
+                                "\ntype '3' if you want to use insertion sort:"))
+            if answer_arr == 1:  # користувач задає послідовність цілих чисел, для цього використаємо масив
                 seq = np.zeros((number), dtype=int)  # створюється масив довжиною заданою користувачем заповнений нулями
                 for i in range(number):
                     while True:
@@ -21,9 +31,11 @@ while True:
                             continue
                         break
 
-            elif answer1 == 2: # послідовність цілих чисел генерується рандомно
+            elif answer_arr == 2: # послідовність цілих чисел генерується рандомно
                 seq = []  # у цей список будуть записуватись рандомно згенеровані елементи
                 def sequence(seq):
+                    ''' Згенерована послідовність псевдовипадкових чисел, достатня для оцінки
+                        швидкості роботи алгорит-му сортування. '''
                     i = 0  # лічильник, для якого при кожній ітерації створюється елемент масиву
                     while i < number:
                         a = random.randint(0, 1000)
@@ -42,9 +54,10 @@ while True:
             continue
         break
 
-    start1 = time.time()
-    def growing_order_bubble(seq, comp):
+
+    def growing_order_bubble(seq, comp, t):
         ''' Сортування бульбашкою за зростанням '''
+        start = time.time()
         for i in range(len(seq) - 1, 0, -1):
             for j in range(i):
                 if seq[j] > seq[j + 1]:
@@ -54,16 +67,17 @@ while True:
         # якщо він більший за наступний, то вони міняються місцями.
         # вкінці першої ітерації першого циклу for найбільший елемент вже стоїть на останній позиції,
         # тому наступна ітерація буде здійснюватись до цього елементу, і так доки всі елементи не будуть відсортовані у порядку зростання
-        return seq, comp
-    seq_grow_bubble, comp_b1 = growing_order_bubble(seq, 0)
-    end1 = time.time()
-    print(f'\nBubble sorting in growing order: {seq_grow_bubble}')
-    print(f'Time spent on bubble sorting {len(seq)} integers in growing order: {end1 - start1}')
-    print(f'Number of comparisons: {comp_b1}, number of interchanges: {comp_b1}')
+        end = time.time()
+        t = end - start
+        # час виконання функції є різницею значень змінної, що містить час відліку до початку виконання функції
+        # і змінної, що містить час після виконання
+        return seq, comp, t
 
-    start2 = time.time()
-    def descending_order_bubble(seq, comp):
+
+
+    def descending_order_bubble(seq, comp, t):
         ''' Сортування бульбашкою за спаданням '''
+        start = time.time()
         for i in range(len(seq) - 1, 0, -1):
             for j in range(i):
                 if seq[j] < seq[j + 1]:
@@ -73,16 +87,14 @@ while True:
         # якщо він менший за наступний, то вони міняються місцями.
         # вкінці першої ітерації першого циклу for найменший елемент вже стоїть на останній позиції,
         # тому наступна ітерація буде здійснюватись до цього елементу, і так доки всі елементи не будуть відсортовані у порядку спадання
-        return seq, comp
-    seq_desc_bubble, comp_b2 = descending_order_bubble(seq, 0)
-    end2 = time.time()
-    print(f'Bubble sorting in descending order: {seq_desc_bubble}')
-    print(f'Time spent on bubble sorting {len(seq)} integers in descending order: {end2 - start2}')
-    print(f'Number of comparisons: {comp_b2}, number of interchanges: {comp_b2}')
+        end = time.time()
+        t = end - start
+        return seq, comp, t
 
-    start3 = time.time()
-    def growing_order_selection(seq, comp, inter):
+
+    def growing_order_selection(seq, comp, inter, t):
         ''' Сортування вибором за зростанням '''
+        start = time.time()
         for i in range(len(seq)-1): # ітерація по всім елементам масиву
             min_el = i 
             # в цьому лічильнику буде зберігатись індекс останнього елемента відсортованої частини масиву, 
@@ -100,16 +112,14 @@ while True:
                 # щоб найменші елементи розташовувались спочатку масиву. якщо ж найменший елемент є першим, обмін не потрібен
                 comp += 1 #  к-ть порівнянь
                 inter += 1 # к-ть обмінів
-        return seq, comp, inter
-    seq_grow_selection, comp_s1, inter_s1 = growing_order_selection(seq, 0, 0)
-    end3 = time.time()
-    print(f'\nSelection sorting in growing order: {seq_grow_selection}')
-    print(f'Time spent on selection sorting {len(seq)} integers in growing order: {end3 - start3}')
-    print(f'Number of comparisons: {comp_s1}, number of interchanges: {inter_s1}')
+        end = time.time()
+        t = end - start
+        return seq, comp, inter, t
 
-    start4 = time.time()
-    def descending_order_selection(seq, comp, inter):
+
+    def descending_order_selection(seq, comp, inter, t):
         ''' Сортування вибором за спаданням '''
+        start = time.time()
         for i in range(len(seq)-1): # ітерація по всім елементам масиву
             max_el = i
             # в цьому лічильнику буде зберігатись індекс останнього елемента відсортованої частини масиву,
@@ -127,16 +137,14 @@ while True:
                 # щоб найбільші елементи розташовувались спочатку масиву. якщо ж найбільший елемент є першим, обмін не потрібен
                 comp += 1  # к-ть порівнянь
                 inter += 1  # к-ть обмінів
-        return seq, comp, inter
-    seq_desc_selection, comp_s2, inter_s2 = descending_order_selection(seq, 0, 0)
-    end4 = time.time()
-    print(f'Selection sorting in descending order: {seq_desc_selection}')
-    print(f'Time spent on selection sorting {len(seq)} integers in descending order: {end4 - start4}')
-    print(f'Number of comparisons: {comp_s2}, number of interchanges: {inter_s2}')
+        end = time.time()
+        t = end - start
+        return seq, comp, inter, t
 
-    start5 = time.time()
-    def growing_order_insertion(seq, comp, inter):
+
+    def growing_order_insertion(seq, comp, inter, t):
         ''' Сортування вставками за зростанням '''
+        start = time.time()
         for i in range(1, len(seq)):
             # цикл починається з другого елементу, перший будемо вважати вже відсортованим,
             # пізніше кількість таких відсортованих елементів будемо збільшувати утворюючи відсортовану частину масиву
@@ -154,17 +162,14 @@ while True:
                     comp += 1
                     break
                     # якщо елемент менший за наступний, значить в цій ітерації він на своєму місці, виходимо з ітерації
+        end = time.time()
+        t = end - start
+        return seq, comp, inter, t
 
-        return seq, comp, inter
-    seq_grow_insertion, comp_i1, inter_i1 = growing_order_insertion(seq, 0, 0)
-    end5 = time.time()
-    print(f'\nInsertion sorting in growing order: {seq_grow_insertion}')
-    print(f'Time spent on insertion sorting {len(seq)} integers in growing order: {end5 - start5}')
-    print(f'Number of comparisons: {comp_i1}, number of interchanges: {inter_i1}')
 
-    start6 = time.time()
-    def descending_order_insertion(seq, comp, inter):
+    def descending_order_insertion(seq, comp, inter, t):
         ''' Сортування вставками за спаданням '''
+        start = time.time()
         for i in range(1, len(seq)):
             # цикл починається з другого елементу, перший будемо вважати вже відсортованим,
             # пізніше кількість таких відсортованих елементів будемо збільшувати утворюючи відсортовану частину масиву
@@ -181,13 +186,47 @@ while True:
                     comp += 1
                     break
                     # якщо елемент більший за наступний, значить в цій ітерації він на своєму місці, виходимо з ітерації
+        end = time.time()
+        t = end - start
+        return seq, comp, inter, t
 
-        return seq, comp, inter
-    seq_desc_insertion, comp_i2, inter_i2 = descending_order_insertion(seq, 0, 0)
-    end6 = time.time()
-    print(f'Insertion sorting in descending order: {seq_desc_insertion}')
-    print(f'Time spent on insertion sorting {len(seq)} integers in descending order: {end6 - start6}')
-    print(f'Number of comparisons: {comp_i2}, number of interchanges: {inter_i2}')
+
+    if answer_order == 1 and answer_sort == 1: # Сортування бульбашкою за зростанням
+        seq_grow_bubble, comp_b1, t1 = growing_order_bubble(seq, 0, 0)
+        print(f'\nBubble sorting in growing order: {seq_grow_bubble}')
+        print(f'Time spent on bubble sorting {len(seq)} integers in growing order: {t1}')
+        print(f'Number of comparisons: {comp_b1}, number of interchanges: {comp_b1}')
+
+    elif answer_order == 1 and answer_sort == 2: # Сортування вибором за зростанням
+        seq_grow_selection, comp_s1, inter_s1, t3 = growing_order_selection(seq, 0, 0, 0)
+        print(f'\nSelection sorting in growing order: {seq_grow_selection}')
+        print(f'Time spent on selection sorting {len(seq)} integers in growing order: {t3}')
+        print(f'Number of comparisons: {comp_s1}, number of interchanges: {inter_s1}')
+
+    elif answer_order == 1 and answer_sort == 3: # Сортування вставками за зростанням
+        seq_grow_insertion, comp_i1, inter_i1, t5 = growing_order_insertion(seq, 0, 0, 0)
+        print(f'\nInsertion sorting in growing order: {seq_grow_insertion}')
+        print(f'Time spent on insertion sorting {len(seq)} integers in growing order: {t5}')
+        print(f'Number of comparisons: {comp_i1}, number of interchanges: {inter_i1}')
+
+    elif answer_order == 2 and answer_sort == 1: #  Сортування бульбашкою за спаданням
+        seq_desc_bubble, comp_b2, t2 = descending_order_bubble(seq, 0, 0)
+        print(f'Bubble sorting in descending order: {seq_desc_bubble}')
+        print(f'Time spent on bubble sorting {len(seq)} integers in descending order: {t2}')
+        print(f'Number of comparisons: {comp_b2}, number of interchanges: {comp_b2}')
+
+    elif answer_order == 2 and answer_sort == 2: # Сортування вибором за спаданням
+
+        seq_desc_selection, comp_s2, inter_s2, t4 = descending_order_selection(seq, 0, 0, 0)
+        print(f'Selection sorting in descending order: {seq_desc_selection}')
+        print(f'Time spent on selection sorting {len(seq)} integers in descending order: {t4}')
+        print(f'Number of comparisons: {comp_s2}, number of interchanges: {inter_s2}')
+
+    elif answer_order == 2 and answer_sort == 3: # Сортування вставками за спаданням
+        seq_desc_insertion, comp_i2, inter_i2, t6 = descending_order_insertion(seq, 0, 0, 0)
+        print(f'Insertion sorting in descending order: {seq_desc_insertion}')
+        print(f'Time spent on insertion sorting {len(seq)} integers in descending order: {t6}')
+        print(f'Number of comparisons: {comp_i2}, number of interchanges: {inter_i2}')
 
     answer = input('\nDo you want to continue? Yes-1, No-2:')
     if answer == '1':
