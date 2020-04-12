@@ -216,7 +216,6 @@ while True:
         print(f'Number of comparisons: {comp_b2}, number of interchanges: {comp_b2}')
 
     elif answer_order == 2 and answer_sort == 2: # Сортування вибором за спаданням
-
         seq_desc_selection, comp_s2, inter_s2, t4 = descending_order_selection(seq, 0, 0, 0)
         print(f'Selection sorting in descending order: {seq_desc_selection}')
         print(f'Time spent on selection sorting {len(seq)} integers in descending order: {t4}')
