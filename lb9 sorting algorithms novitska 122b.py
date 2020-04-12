@@ -18,7 +18,7 @@ while True:
             answer_order = int(input("\nPlease type '1' if you want to sort in growing order,"
                                 "\ntype '2' if you want to sort in descending order:"))
             answer_sort = int(input("\nPlease type '1' if you want to use bubble sort,"
-                                "\ntype '2' if you want to use selection sort:"
+                                "\ntype '2' if you want to use selection sort,"
                                 "\ntype '3' if you want to use insertion sort:"))
             if answer_arr == 1:  # користувач задає послідовність цілих чисел, для цього використаємо масив
                 seq = np.zeros((number), dtype=int)  # створюється масив довжиною заданою користувачем заповнений нулями
